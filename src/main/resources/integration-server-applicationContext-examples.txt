@@ -1,0 +1,45 @@
+  Here are samples routes to add to <camelContext> within applicationContext.xml of the integration server
+  
+  
+  	<!-- Importing wire images: images with iptc/exif fields -->
+  	
+	<bean id="fiegProcessorADK" class="com.atex.custom.camel.FiegFeedProcessor" >
+    	<property name="sleep" value="2000"/>
+    	
+    	<!-- this to allow some content segmentation by provider -->
+    	<property name="securityParent" value="externalid/dam.assets.sample1.d"/>
+    	
+    	<!-- java code to process the text file, must implement ITextParser interface -->
+    	<property name="parserClass" value="com.atex.custom.parser.TextParserADK"/>
+
+    	<!-- field mapping to enable map of more user friendly field values -->
+    	<property name="fieldValueProperties" value="/polopoly/gong/valueMapping.properties"/>
+	</bean>
+	
+	<bean id="fiegProcessorAGI" class="com.atex.custom.camel.FiegFeedProcessor" >
+    	<property name="sleep" value="2000"/>
+    	
+    	<!-- this to allow some content segmentation by provider -->
+    	<property name="securityParent" value="externalid/dam.assets.common.d"/>
+    	
+    	<!-- java code to process the text file, must implement ITextParser interface -->
+    	<property name="parserClass" value="com.atex.custom.parser.TextParserAGI"/>
+    	
+    	<!-- field mapping to enable map of more user friendly field values -->
+    	<property name="fieldValueProperties" value="/polopoly/gong/valueMapping.properties"/>
+	</bean>
+  	...
+
+  	<camel:route>
+	  	<camel:from uri="file:/polopoly/feeds/wires/agi?readLock=changed&amp;moveFailed=error&amp;include=.*\.txt|.*\.TXT" />
+        <camel:threads poolSize="10" >
+        <camel:to uri="fiegProcessorAGI" />
+        </camel:threads>	  	
+	</camel:route>
+   
+    <camel:route>
+	  	<camel:from uri="file:/polopoly/feeds/wires/adk?readLock=changed&amp;moveFailed=error&amp;include=.*\.txt|.*\.TXT" />
+        <camel:threads poolSize="10" >
+        <camel:to uri="fiegProcessorADK" />
+        </camel:threads>	  	
+	</camel:route>
