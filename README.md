@@ -19,7 +19,7 @@ Clone the repository into your project:
 
 ```
 cd ~/gong
-~/gong $ git clone git@github.com:atex-polopoly/module-wires-fieg.git
+~/gong $ git clone https://github.com/atex-polopoly/module-wires-fieg.git
 
 ```
 
@@ -37,5 +37,10 @@ Edit the server-integration  pom.xml to add dependecy to the new module
       <version>1.0</version>
     </dependency>
 ```
+
+### 4. Configure integration server routes
+The purpose of the module is to use parsers to process incoming wire texts, coming from different providers.
+Each provider is supposed to have its own route in Camel/Integration Server. 
+A sample configuration can be found in the dm.desk official documentation page (http://support.atex.com/confluence/display/AdamMaster/Importing+Content#ImportingContent-WiresinFIEG%28orotherflattext%29format)
 
 
