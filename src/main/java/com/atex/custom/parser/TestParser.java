@@ -23,11 +23,11 @@ public class TestParser {
 		String priority = hdrline.substring(9, 10); 
 		String section 	= hdrline.substring(10, 13); 
 		
-		TextParserADK parser = new TextParserADK();
+		TextParserRadiocor parser = new TextParserRadiocor();
 		
 		parser.setFieldValueMapping(fieldValueMapping);
 		try {
-			parser.parseFile(new File("/Users/rdemattei/Documents/Lavoro/ADAM/agenzie_ita/infogate_esempi/ADK-kronos/1342-  33- 507-050114.txt"));
+			parser.parseFile(new File("/Users/rdemattei/Downloads/radiocor.txt"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
