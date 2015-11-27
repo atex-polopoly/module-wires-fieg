@@ -23,11 +23,11 @@ public class TestParser {
 		String priority = hdrline.substring(9, 10); 
 		String section 	= hdrline.substring(10, 13); 
 		
-		TextParserRadiocor parser = new TextParserRadiocor();
+		TextParserWcTagged parser = new TextParserWcTagged();
 		
 		parser.setFieldValueMapping(fieldValueMapping);
 		try {
-			parser.parseFile(new File("/Users/rdemattei/Downloads/radiocor.txt"));
+			parser.parseFile(new File("/Users/rdemattei/Downloads/151125152718B.0"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
