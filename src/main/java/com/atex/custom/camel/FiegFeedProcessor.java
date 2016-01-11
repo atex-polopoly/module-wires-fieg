@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.atex.custom.parser.ITextParser;
-import com.atex.custom.util.PrefixedProperty;
+import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.onecms.app.dam.wire.DamWireArticleBean;
 import com.atex.onecms.content.ContentManager;
 import com.atex.onecms.content.ContentWrite;

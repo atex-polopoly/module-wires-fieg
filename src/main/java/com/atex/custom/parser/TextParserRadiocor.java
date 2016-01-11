@@ -6,12 +6,11 @@ import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.jfree.util.Log;
 
-import com.atex.custom.util.PrefixedProperty;
+import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.onecms.app.dam.wire.DamWireArticleBean;
 
 public class TextParserRadiocor implements ITextParser {

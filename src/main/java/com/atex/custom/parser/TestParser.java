@@ -3,7 +3,7 @@ package com.atex.custom.parser;
 import java.io.File;
 import java.io.FileInputStream;
 
-import com.atex.custom.util.PrefixedProperty;
+import com.atex.onecms.app.dam.util.PrefixedProperty;
 
 public class TestParser {
 

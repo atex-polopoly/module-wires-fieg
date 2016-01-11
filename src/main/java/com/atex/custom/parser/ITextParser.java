@@ -2,7 +2,7 @@ package com.atex.custom.parser;
 
 import java.io.File;
 
-import com.atex.custom.util.PrefixedProperty;
+import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.onecms.app.dam.wire.DamWireArticleBean;
 
 public interface ITextParser {
