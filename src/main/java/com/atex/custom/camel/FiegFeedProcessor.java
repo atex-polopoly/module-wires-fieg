@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.atex.custom.parser.ITextParser;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.onecms.app.dam.wire.DamWireArticleBean;
+import com.atex.onecms.content.ContentId;
 import com.atex.onecms.content.ContentManager;
 import com.atex.onecms.content.ContentWrite;
 import com.atex.onecms.content.ContentWriteBuilder;
@@ -46,7 +47,9 @@ public class FiegFeedProcessor implements Processor {
 	private long sleep = 1000;
 	private String parserClass;
 	private String fieldValueProperties;
-	private String securityParent = "externalid/dam.assets.common.d";
+	private String securityParent = "dam.assets.common.d";
+	
+	ContentId securityParentContentId;
 	
 	public String getSecurityParent() {
 		return securityParent;
@@ -95,6 +98,10 @@ public class FiegFeedProcessor implements Processor {
 			cmServer = cmclient.getCMServer();
 			contentManager = cmclient.getContentManager();
 
+			if (securityParentContentId==null) {
+				securityParentContentId = contentManager.resolve(securityParent, Subject.NOBODY_CALLER).getContentId();
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -170,7 +177,7 @@ public class FiegFeedProcessor implements Processor {
 				DamWireArticleBean damWireArticleBean = parser.parseFile(new File(filePath));
 
 				// p.InsertionInfo
-				InsertionInfoAspectBean insertionInfoAspectBean = new InsertionInfoAspectBean(securityParent);
+				InsertionInfoAspectBean insertionInfoAspectBean = new InsertionInfoAspectBean(securityParentContentId);
 
 
 				/*
