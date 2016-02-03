@@ -74,7 +74,7 @@ public class TextParserWcTagged implements ITextParser {
 			//FileReader always assumes default encoding is OK!
 			input = new BufferedReader( new InputStreamReader(new FileInputStream(inputFile), "Cp1252"));
 			String line = null; //not declared within while loop
-			int l = 0;
+		
 	
 			HashMap<String, String> wcFileValues = new HashMap<String, String>();
 			/* reading TSRE wctagged format file... */
@@ -152,6 +152,10 @@ public class TextParserWcTagged implements ITextParser {
 			articleBean.setBody(text);
 			articleBean.setCreationdate(creationDate);
 
+			wcFieldValue = null;
+			wcFileValues = null;
+			line = null;
+			wcFieldName = null;
 			
 		}catch (Exception ex) {
 			Log.error("Error in processing file: "+inputFile.getAbsolutePath() + " " +ex.getMessage());
