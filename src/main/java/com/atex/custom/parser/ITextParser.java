@@ -2,13 +2,12 @@ package com.atex.custom.parser;
 
 import java.io.File;
 
+import com.atex.onecms.app.dam.DamContentBean;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
-import com.atex.onecms.app.dam.wire.DamWireArticleBean;
 
 public interface ITextParser {
 
+	void setFieldValueMapping(PrefixedProperty fieldValueMapping) ;
 
-	public void setFieldValueMapping(PrefixedProperty fieldValueMapping) ;
-
-	public DamWireArticleBean parseFile(File file) throws Exception;
+	DamContentBean parseFile(File file) throws Exception;
 }
