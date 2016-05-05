@@ -4,32 +4,32 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.jfree.util.Log;
 
+import com.atex.onecms.app.dam.standard.aspects.DamWireArticleAspectBean;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
-import com.atex.onecms.app.dam.wire.DamWireArticleBean;
 
-public class TextParserWcTagged implements ITextParser {
+public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean> {
 
 
-	private static PrefixedProperty fieldValueMapping;
+    private static String TDATE_FIELD = "TDATE";
 
-	private static String TDATE_FIELD = "TDATE";
-	
-	private static String TYPE_FIELD = "TYPE";
-	private static String TIME_FIELD = "TIME";
-	private static String PRIORITY_FIELD = "PRIORITY";
-	private static String SEQNUM_FIELD = "SEQNUM";
-	private static String SECTION_FIELD = "SECTION";
-	private static String SENDER_FIELD = "SENDER";
-	private static String SIZE_FIELD = "SIZE";
-	private static String TITLE_FIELD = "TITLE";
-	private static String TEXT_FIELD = "TEXT";
-	
+    private static String TYPE_FIELD = "TYPE";
+    private static String TIME_FIELD = "TIME";
+    private static String PRIORITY_FIELD = "PRIORITY";
+    private static String SEQNUM_FIELD = "SEQNUM";
+    private static String SECTION_FIELD = "SECTION";
+    private static String SENDER_FIELD = "SENDER";
+    private static String SIZE_FIELD = "SIZE";
+    private static String TITLE_FIELD = "TITLE";
+    private static String TEXT_FIELD = "TEXT";
+
 	
 	/*
 	 * Sample input looks like:
@@ -50,121 +50,115 @@ public class TextParserWcTagged implements ITextParser {
 	 * @TYPE:W
 	 * @TEXT: CONFCOMMERCIO....
 	 */
-	
+
+    @Override
+    public DamWireArticleAspectBean parseFile(final File inputFile) throws Exception {
+        try {
+            //FileReader always assumes default encoding is OK!
+            return parseFile(new InputStreamReader(new FileInputStream(inputFile), "Cp1252"));
+        } catch (Exception e) {
+            Log.error("Error in processing file: " + inputFile.getAbsolutePath() + " " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    DamWireArticleAspectBean parseFile(final Reader reader) throws Exception {
+
+        final DamWireArticleAspectBean articleBean = new DamWireArticleAspectBean();
+
+        BufferedReader input = null;
+
+        final Map<String, String> wcFileValues;
+        try {
+            //use buffering
+            //this implementation reads one line at a time
+            input = new BufferedReader(reader);
+            String line = null; //not declared within while loop
 
 
+            wcFileValues = new HashMap<String, String>();
+            /* reading TSRE wctagged format file... */
 
-	public void setFieldValueMapping(PrefixedProperty fieldValueMapping) {
-		TextParserWcTagged.fieldValueMapping = fieldValueMapping;
-	}
+            String wcFieldName = "";
+            StringBuffer wcFieldValue = new StringBuffer();
 
+            while ((line = input.readLine()) != null) {
+                if ((line.startsWith("@"))) {
 
-	public DamWireArticleBean parseFile(File inputFile) throws Exception{
+                    if (!wcFieldName.equals("")) {
+                        wcFileValues.put(wcFieldName, wcFieldValue.toString());
+                    }
 
-		DamWireArticleBean articleBean = new DamWireArticleBean();	
+                    wcFieldName = line.substring(line.indexOf("@") + 1, line.indexOf(":"));
 
-		try{
+                    wcFieldValue = new StringBuffer();
+                    wcFieldValue.append(line.substring(line.indexOf(":") + 1));
+                } else {
+                    wcFieldValue.append(System.getProperty("line.separator"));
+                    wcFieldValue.append(line);
+                }
 
+            }
+            if (!wcFieldName.equals("")) {
+                wcFileValues.put(wcFieldName, wcFieldValue.toString());
+            }
+        } finally {
+            if (input != null) {
+                input.close(); // Important to avoid NFS errors
+            }
+        }
 
-			//declared here only to make visible to finally clause
-			BufferedReader input = null;
+        HashMap<String, String> values = new HashMap<String, String>();
 
-			//use buffering
-			//this implementation reads one line at a time
-			//FileReader always assumes default encoding is OK!
-			input = new BufferedReader( new InputStreamReader(new FileInputStream(inputFile), "Cp1252"));
-			String line = null; //not declared within while loop
-		
-	
-			HashMap<String, String> wcFileValues = new HashMap<String, String>();
-			/* reading TSRE wctagged format file... */
+        String source = wcFileValues.get(SENDER_FIELD);
+        String section = wcFileValues.get(SECTION_FIELD);
+        String headline = wcFileValues.get(TITLE_FIELD);
+        String priority = wcFileValues.get(PRIORITY_FIELD);
+        String seqnum = wcFileValues.get(SEQNUM_FIELD);
+        String size = wcFileValues.get(SIZE_FIELD);
+        String text = wcFileValues.get(TEXT_FIELD);
 
-			String wcFieldName = "";
-			StringBuffer wcFieldValue = new StringBuffer();
+        /* ------------
+         * Date fields
+         * ------------
+         */
+        String tDate = wcFileValues.get(TDATE_FIELD);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm-dd/MM/yy");
+        Date creationDate = sdf.parse(tDate);
 
-			while (( line = input.readLine()) != null){
-				if ((line.startsWith("@")) ){
+        final PrefixedProperty fieldValueMapping = getFieldValueMapping();
+        if (fieldValueMapping != null) {
 
-					if (!wcFieldName.equals(""))
-						wcFileValues.put(wcFieldName, wcFieldValue.toString());
+            if (fieldValueMapping.getProperty("headline", headline) != null) {
+                headline = fieldValueMapping.getProperty("headline", headline);
+            }
 
-					wcFieldName = line.substring(line.indexOf("@")+1, line.indexOf(":"));
+            if (fieldValueMapping.getProperty("source", source) != null) {
+                source = fieldValueMapping.getProperty("source", source);
+            }
 
-					wcFieldValue = new StringBuffer();
-					wcFieldValue.append(line.substring(line.indexOf(":")+1));
-				}else{
-					wcFieldValue.append(System.getProperty("line.separator")+line);
-				}
+            if (fieldValueMapping.getProperty("section", section) != null) {
+                section = fieldValueMapping.getProperty("section", section);
+            }
 
-			}
-			if (!wcFieldName.equals(""))
-				wcFileValues.put(wcFieldName, wcFieldValue.toString());
-
-
-			input.close(); // Important to avoid NFS errors
-			
-
-
-			HashMap<String, String> values = new HashMap<String, String>();	
-
-			String source = wcFileValues.get(SENDER_FIELD);
-			String section = wcFileValues.get(SECTION_FIELD);
-			String headline = wcFileValues.get(TITLE_FIELD);
-			String priority = wcFileValues.get(PRIORITY_FIELD);
-			String seqnum = wcFileValues.get(SEQNUM_FIELD);
-			String size = wcFileValues.get(SIZE_FIELD);
-			String text = wcFileValues.get(TEXT_FIELD);
-
-			/* ------------
-			 * Date fields
-			 * ------------
-			 */
-			String tDate = wcFileValues.get(TDATE_FIELD);
-			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm-dd/MM/yy");		
-			Date d = sdf.parse(tDate);
-
-			Date creationDate = d;
+            if (fieldValueMapping.getProperty("priority", priority) != null) {
+                priority = fieldValueMapping.getProperty("priority", priority);
+            }
 
 
-			if(fieldValueMapping.getProperty("headline", headline)!=null)
-				headline = fieldValueMapping.getProperty("headline", headline);
+            if (fieldValueMapping.getProperty("text", text) != null) {
+                text = fieldValueMapping.getProperty("text", text);
+            }
+        }
 
-			if(fieldValueMapping.getProperty("source", source)!=null)
-				source = fieldValueMapping.getProperty("source", source);
+        articleBean.setHeadline(headline);
+        articleBean.setSource(source);
+        articleBean.setSection(section);
+        articleBean.setBody(text);
+        articleBean.setCreationdate(creationDate);
 
-			if(fieldValueMapping.getProperty("section", section)!=null)
-				section = fieldValueMapping.getProperty("section", section);
-			
-			if(fieldValueMapping.getProperty("priority", priority)!=null)
-				priority = fieldValueMapping.getProperty("priority", priority);
-
-
-			if(fieldValueMapping.getProperty("text", text)!=null)
-				text = fieldValueMapping.getProperty("text", text);
-
-
-			articleBean.setHeadline(headline);
-			articleBean.setSource(source);
-			articleBean.setSection(section);
-			articleBean.setPriority(priority);
-			articleBean.setSeqnum(seqnum);
-			articleBean.setSize(size);
-			articleBean.setBody(text);
-			articleBean.setCreationdate(creationDate);
-
-			wcFieldValue = null;
-			wcFileValues = null;
-			line = null;
-			wcFieldName = null;
-			
-		}catch (Exception ex) {
-			Log.error("Error in processing file: "+inputFile.getAbsolutePath() + " " +ex.getMessage());
-			throw ex;
-
-		}
-		return articleBean;
-
-	}
-
+        return articleBean;
+    }
 
 }
