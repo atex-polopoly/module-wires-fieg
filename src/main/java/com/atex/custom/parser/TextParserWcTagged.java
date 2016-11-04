@@ -55,7 +55,7 @@ public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean>
     public DamWireArticleAspectBean parseFile(final File inputFile) throws Exception {
         try {
             //FileReader always assumes default encoding is OK!
-            return parseFile(new InputStreamReader(new FileInputStream(inputFile), "Cp1252"));
+            return parseFile(new InputStreamReader(new FileInputStream(inputFile), getEncoding()));
         } catch (Exception e) {
             Log.error("Error in processing file: " + inputFile.getAbsolutePath() + " " + e.getMessage(), e);
             throw e;

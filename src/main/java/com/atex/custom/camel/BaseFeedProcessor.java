@@ -42,6 +42,7 @@ public abstract class BaseFeedProcessor implements Processor {
     private String parserClass;
     private String fieldValueProperties;
     private String securityParent = "dam.assets.common.d";
+    private String encoding = "UTF-8";
 
     ContentId securityParentContentId;
 
@@ -85,8 +86,17 @@ public abstract class BaseFeedProcessor implements Processor {
     public void setFieldValueProperties(String fieldValueProperties) {
         this.fieldValueProperties = fieldValueProperties;
     }
+    
 
-    public void init() {
+    public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public void init() {
 
 
         Application application = IntegrationServerApplication.getPolopolyApplication();

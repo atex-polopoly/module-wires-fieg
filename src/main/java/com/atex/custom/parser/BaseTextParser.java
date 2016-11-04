@@ -16,6 +16,7 @@ import com.atex.onecms.app.dam.util.PrefixedProperty;
  */
 public abstract class BaseTextParser<T extends DamContentBean> implements ITextParser {
 
+	private String encoding = "UTF-8";
     private PrefixedProperty fieldValueMapping;
 
     public void setFieldValueMapping(final PrefixedProperty fieldValueMapping) {
@@ -26,7 +27,16 @@ public abstract class BaseTextParser<T extends DamContentBean> implements ITextP
         return fieldValueMapping;
     }
 
-    public T parseFile(final File inputFile) throws Exception {
+    
+    public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public T parseFile(final File inputFile) throws Exception {
         try {
             //FileReader always assumes default encoding is OK!
             return parseFile(new FileReader(inputFile));

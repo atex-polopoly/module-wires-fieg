@@ -37,6 +37,7 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
             Class<?> c = Class.forName(getParserClass());
             ITextParser parser = (ITextParser) c.newInstance();
 
+            parser.setEncoding(getEncoding());
             parser.setFieldValueMapping(fieldValueMapping);
 
             // contentData

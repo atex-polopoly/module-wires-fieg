@@ -7,6 +7,7 @@ import com.atex.onecms.app.dam.util.PrefixedProperty;
 
 public interface ITextParser {
 
+	void setEncoding(String encoding);
 	void setFieldValueMapping(PrefixedProperty fieldValueMapping) ;
 
 	DamContentBean parseFile(File file) throws Exception;

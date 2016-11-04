@@ -34,7 +34,7 @@ Edit the server-integration  pom.xml to add dependecy to the new module
     <dependency>
       <artifactId>module-wires-fieg</artifactId>
       <groupId>com.atex</groupId>
-      <version>1.0</version>
+      <version>2.0</version>
     </dependency>
 ```
 

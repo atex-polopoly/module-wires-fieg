@@ -5,9 +5,10 @@
   	
 	<bean id="fiegProcessorADK" class="com.atex.custom.camel.FiegFeedProcessor" >
     	<property name="sleep" value="2000"/>
+    	<property name="encoding" value="Cp1252"/> <!-- default is UTF-8 -->
     	
     	<!-- this to allow some content segmentation by provider -->
-    	<property name="securityParent" value="externalid/dam.assets.sample1.d"/>
+    	<property name="securityParent" value="dam.assets.sample1.d"/>
     	
     	<!-- java code to process the text file, must implement ITextParser interface -->
     	<property name="parserClass" value="com.atex.custom.parser.TextParserADK"/>
@@ -18,9 +19,10 @@
 	
 	<bean id="fiegProcessorAGI" class="com.atex.custom.camel.FiegFeedProcessor" >
     	<property name="sleep" value="2000"/>
+    	<property name="encoding" value="Cp1252"/> <!-- default is UTF-8 -->
     	
     	<!-- this to allow some content segmentation by provider -->
-    	<property name="securityParent" value="externalid/dam.assets.common.d"/>
+    	<property name="securityParent" value="dam.assets.common.d"/>
     	
     	<!-- java code to process the text file, must implement ITextParser interface -->
     	<property name="parserClass" value="com.atex.custom.parser.TextParserAGI"/>
