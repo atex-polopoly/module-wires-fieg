@@ -73,9 +73,9 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
 
             if (!cr.getStatus().isOk()) {
                 log.error("Error importing file: " + filePath + "." + cr.getStatus().toString());
+            }else {
+                log.info("Inserted content with contentid: " + cr.getContentId().getContentId() + " from file:" + filePath);
             }
-            log.info("Inserted content with contentid: "+cr.getContentId().getContentId()+" from file:"+filePath);
-
 
 
         } finally {
