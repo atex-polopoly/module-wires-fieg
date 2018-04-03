@@ -44,6 +44,8 @@ public abstract class BaseFeedProcessor implements Processor {
     private String securityParent = "dam.assets.common.d";
     private String encoding = "UTF-8";
 
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
     ContentId securityParentContentId;
 
     public static CMServer getCmServer() {
@@ -170,6 +172,8 @@ public abstract class BaseFeedProcessor implements Processor {
         if (o instanceof GenericFile) {
             GenericFile file = (GenericFile) o;
             try {
+                String filePath = file.getAbsoluteFilePath();
+                log.info("Processing image file: "+filePath);
                 processFile(file);
             } catch (Exception e) {
                 LOGGER.error("Error during processing", e);

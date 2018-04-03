@@ -13,14 +13,19 @@ import com.atex.custom.parser.ITextParser;
 import com.atex.onecms.app.dam.DamContentBean;
 import com.atex.onecms.content.ContentWrite;
 import com.atex.onecms.content.ContentWriteBuilder;
+import com.atex.onecms.content.ContentResult;
 import com.atex.onecms.content.InsertionInfoAspectBean;
 import com.atex.onecms.content.Subject;
 import com.atex.onecms.content.metadata.MetadataInfo;
 import com.polopoly.metadata.Metadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class FiegFeedProcessor extends BaseFeedProcessor {
 
     private static final Subject SYSTEM_SUBJECT = new Subject("98", null);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void processFile(final GenericFile file) throws Exception {
@@ -64,7 +69,14 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
             cwb.aspect("atex.Metadata", metadataInfo);
 
             final ContentWrite<DamContentBean> content = cwb.buildCreate();
-            getContentManager().create(content, SYSTEM_SUBJECT);
+            ContentResult<Object> cr = getContentManager().create(content, SYSTEM_SUBJECT);
+
+            if (!cr.getStatus().isOk()) {
+                log.error("Error importing file: " + filePath + "." + cr.getStatus().toString());
+            }
+            log.info("Inserted content with contentid: "+cr.getContentId().getContentId()+" from file:"+filePath);
+
+
 
         } finally {
             IOUtils.closeQuietly(bis);
