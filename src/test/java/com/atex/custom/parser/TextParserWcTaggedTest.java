@@ -28,8 +28,8 @@ public class TextParserWcTaggedTest {
         Assert.assertNotNull(article);
 
         Assert.assertEquals("RADCOR", article.getSource());
-        Assert.assertEquals("CONFCOMMERCIO: SANGALLI, L'ILLEGALITÀ SOTTRAE AL SETTORE 27 MILIARDI DI EUROE METTE A RISC", article.getHeadline());
-        Assert.assertEquals("CONFCOMMERCIO...", article.getBody());
+        Assert.assertEquals("CONFCOMMERCIO: SANGALLI, L'ILLEGALITÀ SOTTRAE AL SETTORE 27 MILIARDI DI EUROE METTE A RISC", article.getHeadline().getText());
+        Assert.assertEquals("CONFCOMMERCIO...", article.getBody().getText());
         Assert.assertEquals("ECONOMIA", article.getSection());
 
         final Calendar c = Calendar.getInstance();

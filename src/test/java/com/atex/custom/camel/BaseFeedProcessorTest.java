@@ -3,6 +3,7 @@ package com.atex.custom.camel;
 
 import com.atex.onecms.app.dam.standard.aspects.OneArticleBean;
 import com.atex.onecms.app.dam.standard.aspects.OneContentBean;
+import com.atex.onecms.app.dam.standard.aspects.OneImageBean;
 import org.apache.camel.component.file.GenericFile;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,23 +41,27 @@ public class BaseFeedProcessorTest {
     @Test
     public void testContentWriteBuilderWireArticleAspectBean() {
         final OneArticleBean bean = new OneArticleBean();
+        bean.setInputTemplate("p.DamWireArticle");
         final ContentWriteBuilder<OneContentBean> cwb = processor.createContentWriteBuilder(bean);
         Assert.assertNotNull(cwb);
 
         final ContentWrite<OneContentBean> cw = cwb.build();
         Assert.assertEquals(bean, cw.getContentData());
-        Assert.assertEquals("atex.dam.standard.WireArticle", cw.getContentDataType());
+        Assert.assertEquals("atex.onecms.article", cw.getContentDataType());
+        Assert.assertEquals("p.DamWireArticle", cw.getContentData().getInputTemplate());
     }
 
     @Test
     public void testContentWriteBuilderWireImageAspectBean() {
-        final OneArticleBean bean = new OneArticleBean();
+        final OneImageBean bean = new OneImageBean();
+        bean.setInputTemplate("p.DamWireImage");
         final ContentWriteBuilder<OneContentBean> cwb = processor.createContentWriteBuilder(bean);
         Assert.assertNotNull(cwb);
 
         final ContentWrite<OneContentBean> cw = cwb.build();
         Assert.assertEquals(bean, cw.getContentData());
-        Assert.assertEquals("atex.dam.standard.WireImage", cw.getContentDataType());
+        Assert.assertEquals("atex.onecms.image", cw.getContentDataType());
+        Assert.assertEquals("p.DamWireImage", cw.getContentData().getInputTemplate());
     }
 
     private class TestProcessor extends BaseFeedProcessor {
