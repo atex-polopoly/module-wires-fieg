@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.atex.onecms.app.dam.standard.aspects.OneContentBean;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.file.GenericFile;
@@ -14,7 +15,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
-import com.atex.onecms.app.dam.DamContentBean;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.onecms.content.ContentId;
 import com.atex.onecms.content.ContentManager;
@@ -204,8 +204,8 @@ public abstract class BaseFeedProcessor implements Processor {
         }
     }
 
-    protected ContentWriteBuilder<DamContentBean> createContentWriteBuilder(final DamContentBean aspect) {
-        ContentWriteBuilder<DamContentBean> cwb = new ContentWriteBuilder<>();
+    protected ContentWriteBuilder<OneContentBean> createContentWriteBuilder(final OneContentBean aspect) {
+        ContentWriteBuilder<OneContentBean> cwb = new ContentWriteBuilder<>();
         final AspectDefinition aspectDefinition = AnnotationUtils.findAnnotation(aspect.getClass(), AspectDefinition.class);
         if (aspectDefinition != null) {
             final String[] types = aspectDefinition.value();

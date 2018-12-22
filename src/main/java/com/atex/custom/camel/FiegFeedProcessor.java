@@ -6,11 +6,11 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.atex.onecms.app.dam.standard.aspects.OneContentBean;
 import org.apache.camel.component.file.GenericFile;
 import org.apache.commons.io.IOUtils;
 
 import com.atex.custom.parser.ITextParser;
-import com.atex.onecms.app.dam.DamContentBean;
 import com.atex.onecms.content.ContentWrite;
 import com.atex.onecms.content.ContentWriteBuilder;
 import com.atex.onecms.content.ContentResult;
@@ -46,7 +46,7 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
             parser.setFieldValueMapping(fieldValueMapping);
 
             // contentData
-            final DamContentBean damContentBean = parser.parseFile(new File(filePath));
+            final OneContentBean oneContentBean = parser.parseFile(new File(filePath));
 
             // add p.InsertionInfo
             final InsertionInfoAspectBean insertionInfoAspectBean = new InsertionInfoAspectBean(securityParentContentId);
@@ -63,12 +63,12 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
             metadataInfo.setMetadata(metadata);
 
 
-            final ContentWriteBuilder<DamContentBean> cwb = createContentWriteBuilder(damContentBean);
+            final ContentWriteBuilder<OneContentBean> cwb = createContentWriteBuilder(oneContentBean);
 
             cwb.aspect("p.InsertionInfo", insertionInfoAspectBean);
             cwb.aspect("atex.Metadata", metadataInfo);
 
-            final ContentWrite<DamContentBean> content = cwb.buildCreate();
+            final ContentWrite<OneContentBean> content = cwb.buildCreate();
             ContentResult<Object> cr = getContentManager().create(content, SYSTEM_SUBJECT);
 
             if (!cr.getStatus().isOk()) {

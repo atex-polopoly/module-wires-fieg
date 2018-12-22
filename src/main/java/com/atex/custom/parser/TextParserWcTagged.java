@@ -10,12 +10,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.atex.onecms.app.dam.standard.aspects.OneArticleBean;
+import com.atex.plugins.structured.text.StructuredText;
 import org.jfree.util.Log;
 
 import com.atex.onecms.app.dam.standard.aspects.DamWireArticleAspectBean;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
 
-public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean> {
+public class TextParserWcTagged extends BaseTextParser<OneArticleBean> {
 
 
     private static String TDATE_FIELD = "TDATE";
@@ -52,7 +54,7 @@ public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean>
 	 */
 
     @Override
-    public DamWireArticleAspectBean parseFile(final File inputFile) throws Exception {
+    public OneArticleBean parseFile(final File inputFile) throws Exception {
         try {
             //FileReader always assumes default encoding is OK!
             return parseFile(new InputStreamReader(new FileInputStream(inputFile), getEncoding()));
@@ -63,9 +65,10 @@ public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean>
     }
 
     @Override
-    DamWireArticleAspectBean parseFile(final Reader reader) throws Exception {
+    OneArticleBean parseFile(final Reader reader) throws Exception {
 
-        final DamWireArticleAspectBean articleBean = new DamWireArticleAspectBean();
+        final OneArticleBean articleBean = new OneArticleBean();
+        articleBean.setInputTemplate(OneArticleBean.INPUT_TEMPLATE_WIRE);
 
         BufferedReader input = null;
 
@@ -152,10 +155,10 @@ public class TextParserWcTagged extends BaseTextParser<DamWireArticleAspectBean>
             }
         }
 
-        articleBean.setHeadline(headline);
+        articleBean.setHeadline(new StructuredText(headline));
         articleBean.setSource(source);
         articleBean.setSection(section);
-        articleBean.setBody(text);
+        articleBean.setBody(new StructuredText(text));
         articleBean.setCreationdate(creationDate);
 
         return articleBean;
