@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 
+import com.atex.onecms.app.dam.standard.aspects.OneContentBean;
 import org.jfree.util.Log;
 
-import com.atex.onecms.app.dam.DamContentBean;
 import com.atex.onecms.app.dam.util.PrefixedProperty;
 
 /**
@@ -14,7 +14,7 @@ import com.atex.onecms.app.dam.util.PrefixedProperty;
  *
  * @author mnova
  */
-public abstract class BaseTextParser<T extends DamContentBean> implements ITextParser {
+public abstract class BaseTextParser<T extends OneContentBean> implements ITextParser {
 
 	private String encoding = "UTF-8";
     private PrefixedProperty fieldValueMapping;

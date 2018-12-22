@@ -1,12 +1,13 @@
 package com.atex.custom.camel;
 
+
+import com.atex.onecms.app.dam.standard.aspects.OneArticleBean;
+import com.atex.onecms.app.dam.standard.aspects.OneContentBean;
 import org.apache.camel.component.file.GenericFile;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.atex.onecms.app.dam.DamContentBean;
-import com.atex.onecms.app.dam.standard.aspects.DamWireArticleAspectBean;
-import com.atex.onecms.app.dam.standard.aspects.DamWireImageAspectBean;
+
 import com.atex.onecms.content.ContentWrite;
 import com.atex.onecms.content.ContentWriteBuilder;
 
@@ -38,22 +39,22 @@ public class BaseFeedProcessorTest {
 
     @Test
     public void testContentWriteBuilderWireArticleAspectBean() {
-        final DamWireArticleAspectBean bean = new DamWireArticleAspectBean();
-        final ContentWriteBuilder<DamContentBean> cwb = processor.createContentWriteBuilder(bean);
+        final OneArticleBean bean = new OneArticleBean();
+        final ContentWriteBuilder<OneContentBean> cwb = processor.createContentWriteBuilder(bean);
         Assert.assertNotNull(cwb);
 
-        final ContentWrite<DamContentBean> cw = cwb.build();
+        final ContentWrite<OneContentBean> cw = cwb.build();
         Assert.assertEquals(bean, cw.getContentData());
         Assert.assertEquals("atex.dam.standard.WireArticle", cw.getContentDataType());
     }
 
     @Test
     public void testContentWriteBuilderWireImageAspectBean() {
-        final DamWireImageAspectBean bean = new DamWireImageAspectBean();
-        final ContentWriteBuilder<DamContentBean> cwb = processor.createContentWriteBuilder(bean);
+        final OneArticleBean bean = new OneArticleBean();
+        final ContentWriteBuilder<OneContentBean> cwb = processor.createContentWriteBuilder(bean);
         Assert.assertNotNull(cwb);
 
-        final ContentWrite<DamContentBean> cw = cwb.build();
+        final ContentWrite<OneContentBean> cw = cwb.build();
         Assert.assertEquals(bean, cw.getContentData());
         Assert.assertEquals("atex.dam.standard.WireImage", cw.getContentDataType());
     }

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 
+import com.atex.onecms.app.dam.standard.aspects.OneArticleBean;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TextParserWcTaggedTest {
         final InputStream is = this.getClass().getResourceAsStream("/wire/160429113517B");
         Assert.assertNotNull(is);
 
-        final DamWireArticleAspectBean article = parser.parseFile(new InputStreamReader(is));
+        final OneArticleBean article = parser.parseFile(new InputStreamReader(is));
         Assert.assertNotNull(article);
 
         Assert.assertEquals("RADCOR", article.getSource());
