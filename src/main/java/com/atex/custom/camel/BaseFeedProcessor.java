@@ -46,7 +46,7 @@ public abstract class BaseFeedProcessor implements Processor {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    ContentId securityParentContentId;
+    private ContentId securityParentContentId;
 
     public static CMServer getCmServer() {
         return cmServer;
@@ -62,6 +62,14 @@ public abstract class BaseFeedProcessor implements Processor {
 
     public void setSecurityParent(String securityParent) {
         this.securityParent = securityParent;
+    }
+
+    public ContentId getSecurityParentContentId() {
+        return securityParentContentId;
+    }
+
+    public void setSecurityParentContentId(ContentId securityParentContentId) {
+        this.securityParentContentId = securityParentContentId;
     }
 
     public long getSleep() {
@@ -98,6 +106,11 @@ public abstract class BaseFeedProcessor implements Processor {
 		this.encoding = encoding;
 	}
 
+    public void initSecurityParent(){
+        securityParentContentId = contentManager.resolve(getSecurityParent(), Subject.NOBODY_CALLER).getContentId();
+        setSecurityParentContentId(securityParentContentId);
+    }
+
 	public void init() {
 
 
@@ -109,10 +122,6 @@ public abstract class BaseFeedProcessor implements Processor {
 
             cmServer = cmclient.getCMServer();
             contentManager = cmclient.getContentManager();
-
-            if (securityParentContentId == null) {
-                securityParentContentId = contentManager.resolve(securityParent, Subject.NOBODY_CALLER).getContentId();
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,6 +167,10 @@ public abstract class BaseFeedProcessor implements Processor {
     public void process(final Exchange exchange) throws Exception {
         if (cmServer == null) {
             init();
+        }
+
+        if (securityParentContentId == null) {
+            initSecurityParent();
         }
 
         if (cmServer == null) {
