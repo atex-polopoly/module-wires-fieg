@@ -71,7 +71,8 @@ public class AnsaItaliaMondoParser extends AnsaParser {
 						if (pNode != null) {
 							body = getNodeText(pNode);
 							if (!StringUtil.isEmpty(body)) {
-								body = body.replace(".&#10;", "</p><p>");
+								body = body.replaceAll("\\.\r\n|\\.\r|\\.\n", ".</p><p>");
+								body = body.replaceAll("\r\n|\r|\n", " ");
 								body = "<p>" + body + "</p>";
 							}
 						}
