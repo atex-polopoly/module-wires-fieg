@@ -49,7 +49,7 @@ public class FiegFeedProcessor extends BaseFeedProcessor {
             final OneContentBean oneContentBean = parser.parseFile(new File(filePath));
 
             // add p.InsertionInfo
-            final InsertionInfoAspectBean insertionInfoAspectBean = new InsertionInfoAspectBean(securityParentContentId);
+            final InsertionInfoAspectBean insertionInfoAspectBean = new InsertionInfoAspectBean(getSecurityParentContentId());
 
 
             // add atex.metadata
