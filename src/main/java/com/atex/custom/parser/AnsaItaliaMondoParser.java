@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.atex.onecms.app.dam.standard.aspects.OneArticleBean;
+import com.atex.onecms.app.dam.util.PrefixedProperty;
 import com.atex.plugins.structured.text.StructuredText;
 import com.polopoly.metadata.Dimension;
 import com.polopoly.metadata.Entity;
@@ -23,11 +24,17 @@ import com.polopoly.util.StringUtil;
 
 public class AnsaItaliaMondoParser extends AnsaParser {
 
+	private static PrefixedProperty fieldValueMapping;
+
+	public void setFieldValueMapping(PrefixedProperty fieldValueMapping) {
+		AnsaItaliaMondoParser.fieldValueMapping = fieldValueMapping;
+	}
+
 	public AnsaItaliaMondoInfo parseFile(BufferedInputStream bis) throws Exception {
 		AnsaItaliaMondoInfo ansaItaliaMondoInfo = new AnsaItaliaMondoInfo();
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
-		//an instance of builder to parse the specified xml file  
-		DocumentBuilder db = dbf.newDocumentBuilder();  
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		//an instance of builder to parse the specified xml file
+		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document document = db.parse(bis);
 
 		OneArticleBean articleBean = new OneArticleBean();
@@ -40,6 +47,8 @@ public class AnsaItaliaMondoParser extends AnsaParser {
 		String keywords = "";
 		String date = "";
 		String ANSA_SOURCE = "ANSA";
+		String source = ANSA_SOURCE;
+
 		ArrayList<String> fileImages = new ArrayList<String>();
 		Element root = document.getDocumentElement();
 		final Node bodyNode = getChildElement(root, "body");
@@ -53,6 +62,15 @@ public class AnsaItaliaMondoParser extends AnsaParser {
 				final Node bylineNode = getChildElement(bodyheadNode, "byline");
 				if (bylineNode != null) {
 					lead = getNodeText(bylineNode);
+				}
+				final Node distributorNode = getChildElement(bodyheadNode, "distributor");
+				if (distributorNode != null) {
+					final Node orgNode = getChildElement(distributorNode, "org");
+					if (orgNode != null) {
+						source = getNodeText(orgNode);
+						source = source.replace("&quot;", "\"");
+						source = source.trim();
+					}
 				}
 				final Node datelineNode = getChildElement(bodyheadNode, "dateline");
 				if (datelineNode != null) {
@@ -112,15 +130,24 @@ public class AnsaItaliaMondoParser extends AnsaParser {
 
 		Date d_pubDate = formatterPubDate.parse(date);
 		articleBean.setPublicationDate(d_pubDate.getTime());
-		articleBean.setSource(ANSA_SOURCE);
+
+		if(fieldValueMapping != null && fieldValueMapping.getProperty("source", source)!=null) {
+			source = fieldValueMapping.getProperty("source", source);
+		}
+		articleBean.setSource(source);
+
+		if(fieldValueMapping != null && fieldValueMapping.getProperty("section", category)!=null) {
+			category = fieldValueMapping.getProperty("section", category);
+		}
+		articleBean.setSection(category);
 
 		ansaItaliaMondoInfo.setBean(articleBean);
 
 		final Metadata metadata = new Metadata();
 		if (!StringUtil.isEmpty(location)) {
 			Dimension dimension = Optional
-					.ofNullable(metadata.getDimensionById("dimension.Location"))
-					.orElse(new Dimension("dimension.Location", "Location", false));
+							.ofNullable(metadata.getDimensionById("dimension.Location"))
+							.orElse(new Dimension("dimension.Location", "Location", false));
 			if (metadata.getDimensionById("dimension.Location") == null) {
 				dimension.addEntity(new Entity(location));
 				metadata.addDimension(dimension);
@@ -132,8 +159,8 @@ public class AnsaItaliaMondoParser extends AnsaParser {
 		List<String> tags = new ArrayList<String>( Arrays.asList( tag_list ) );
 		if (tag_list.length > 0) {
 			Dimension dimension = Optional
-					.ofNullable(metadata.getDimensionById("dimension.Tag"))
-					.orElse(new Dimension("dimension.Tag", "Tag", false));
+							.ofNullable(metadata.getDimensionById("dimension.Tag"))
+							.orElse(new Dimension("dimension.Tag", "Tag", false));
 			if (metadata.getDimensionById("dimension.Tag") == null) {
 				tags.forEach(t -> dimension.addEntity(new Entity(t.trim())));
 				metadata.addDimension(dimension);
